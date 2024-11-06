@@ -76,8 +76,15 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void performLogin(String email, String password) {
-        // TODO: Implement your login logic here
-        // This could involve API calls, database queries, etc.
-        Toast.makeText(this, "Performing login...", Toast.LENGTH_SHORT).show();
+        // Your login validation logic here
+
+        if (loginSuccessful) {
+            // Start Dashboard Activity
+            Intent intent = new Intent(LoginActivity.this, DashboardActivity.class);
+            startActivity(intent);
+            finish(); // Close LoginActivity
+        } else {
+            Toast.makeText(this, "Login failed", Toast.LENGTH_SHORT).show();
+        }
     }
 }
