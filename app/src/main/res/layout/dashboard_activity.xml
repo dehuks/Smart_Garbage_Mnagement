@@ -1,6 +1,119 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:padding="16dp">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <!-- Dashboard Title -->
+    <TextView
+        android:id="@+id/dashboardTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Welcome to the Smart Waste Management Dashboard"
+        android:textSize="24sp"
+        android:layout_centerHorizontal="true"
+        android:textColor="@android:color/black" />
+
+    <!-- Subtitle -->
+    <TextView
+        android:id="@+id/dashboardSubtitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Your data at a glance"
+        android:textSize="18sp"
+        android:layout_below="@id/dashboardTitle"
+        android:layout_marginTop="8dp"
+        android:layout_centerHorizontal="true"
+        android:textColor="@android:color/darker_gray" />
+
+    <!-- Waste Reduction Tips Title -->
+    <TextView
+        android:id="@+id/tipsTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Waste Reduction Tips"
+        android:textSize="20sp"
+        android:layout_below="@id/dashboardSubtitle"
+        android:layout_marginTop="24dp"
+        android:textColor="@android:color/holo_blue_dark" />
+
+    <!-- Waste Reduction Tips Content -->
+    <TextView
+        android:id="@+id/tipsContent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="• Reduce plastic use\n• Compost organic waste\n• Recycle paper, glass, and metals"
+        android:textSize="16sp"
+        android:layout_below="@id/tipsTitle"
+        android:layout_marginTop="8dp"
+        android:textColor="@android:color/black" />
+
+    <!-- ImageView for Recycling Icon -->
+    <ImageView
+        android:id="@+id/recycleIcon"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_below="@id/tipsContent"
+        android:layout_marginTop="16dp"
+        android:layout_alignParentStart="true"
+        android:src="@drawable/ic_recycle"
+        android:contentDescription="Recycle Icon"/>
+
+    <!-- ImageView for Composting Icon -->
+    <ImageView
+        android:id="@+id/compostIcon"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_toEndOf="@id/recycleIcon"
+        android:layout_alignTop="@id/recycleIcon"
+        android:layout_marginStart="16dp"
+        android:src="@drawable/ic_compost"
+        android:contentDescription="Compost Icon"/>
+
+    <!-- ImageView for Statistics Icon -->
+    <ImageView
+        android:id="@+id/statsIcon"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_toEndOf="@id/compostIcon"
+        android:layout_alignTop="@id/recycleIcon"
+        android:layout_marginStart="16dp"
+        android:src="@drawable/ic_stats"
+        android:contentDescription="Statistics Icon"/>
+
+    <!-- Daily Waste Statistics Title -->
+    <TextView
+        android:id="@+id/statsTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Today's Waste Statistics"
+        android:textSize="20sp"
+        android:layout_below="@id/recycleIcon"
+        android:layout_marginTop="24dp"
+        android:textColor="@android:color/holo_green_dark" />
+
+    <!-- Daily Waste Statistics Content -->
+    <TextView
+        android:id="@+id/statsContent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="• Plastic: 1.5 kg\n• Organic: 2.3 kg\n• Paper: 1.0 kg"
+        android:textSize="16sp"
+        android:layout_below="@id/statsTitle"
+        android:layout_marginTop="8dp"
+        android:textColor="@android:color/black" />
+
+    <!-- Request Pickup Button -->
+    <Button
+        android:id="@+id/requestPickupButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Request Pickup Now"
+        android:textSize="18sp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="16dp"
+        android:backgroundTint="@android:color/holo_blue_dark"
+        android:textColor="@android:color/white"/>
+
+</RelativeLayout>

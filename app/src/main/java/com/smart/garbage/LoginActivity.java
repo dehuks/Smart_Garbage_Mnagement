@@ -1,6 +1,5 @@
 package com.smart.garbage;
 
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Patterns;
@@ -17,6 +16,10 @@ public class LoginActivity extends AppCompatActivity {
     private EditText passwordInput;
     private Button loginButton;
     private TextView signupLink;
+
+    // Hardcoded credentials
+    private static final String HARD_CODED_EMAIL = "user@example.com";
+    private static final String HARD_CODED_PASSWORD = "password123";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,8 +79,16 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void performLogin(String email, String password) {
-        // TODO: Implement your login logic here
-        // This could involve API calls, database queries, etc.
-        Toast.makeText(this, "Performing login...", Toast.LENGTH_SHORT).show();
+        // Check if the input matches the hardcoded credentials
+        if (email.equals(HARD_CODED_EMAIL) && password.equals(HARD_CODED_PASSWORD)) {
+            Toast.makeText(this, "Login successful!", Toast.LENGTH_SHORT).show();
+
+            // Redirect to DashboardActivity
+            Intent intent = new Intent(LoginActivity.this, DashboardActivity.class);
+            startActivity(intent);
+            finish(); // Optional: close LoginActivity so it can't be returned to with the back button
+        } else {
+            Toast.makeText(this, "Invalid email or password", Toast.LENGTH_SHORT).show();
+        }
     }
 }

@@ -1,7 +1,7 @@
 package com.smart.garbage;
 
+import android.content.Intent;
 import android.os.Bundle;
-
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
@@ -15,10 +15,17 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
+
+        // Apply window insets for edge-to-edge experience
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
+        // Automatically navigate to DashboardActivity
+        Intent intent = new Intent(MainActivity.this, DashboardActivity.class);
+        startActivity(intent);
+        finish();  // Finish MainActivity to prevent the user from going back to it
     }
 }
