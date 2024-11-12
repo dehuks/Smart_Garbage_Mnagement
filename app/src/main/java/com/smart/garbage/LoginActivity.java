@@ -93,16 +93,57 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void performLogin(String email, String password) {
-        // Check if the input matches the hardcoded credentials
-        if (email.equals(HARD_CODED_EMAIL) && password.equals(HARD_CODED_PASSWORD)) {
-            Toast.makeText(this, "Login successful!", Toast.LENGTH_SHORT).show();
+        // Disable login button to prevent multiple attempts
+        loginButton.setEnabled(false);
 
-            // Redirect to DashboardActivity
-            Intent intent = new Intent(LoginActivity.this, DashboardActivity.class);
-            startActivity(intent);
-            finish(); // Optional: close LoginActivity so it can't be returned to with the back button
-        } else {
-            Toast.makeText(this, "Invalid email or password", Toast.LENGTH_SHORT).show();
-        }
+        // Show loading state
+        Toast.makeText(this, "Logging in...", Toast.LENGTH_SHORT).show();
+
+        db.collection("Clients")
+                .document(email)
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        DocumentSnapshot document = task.getResult();
+                        if (document.exists()) {
+                            String storedPassword = document.getString("password");
+
+                            if (password.equals(storedPassword)) {
+                                // Show success message
+                                Toast.makeText(LoginActivity.this, "Login Successful", Toast.LENGTH_SHORT).show();
+
+                                // Create and start dashboard activity
+                                Intent dashboardIntent = new Intent(LoginActivity.this, DashboardActivity.class);
+                                dashboardIntent.putExtra("email", email);
+                                dashboardIntent.putExtra("client_name", document.getString("client_name"));
+                                startActivity(dashboardIntent);
+                                finish();
+                            } else {
+                                // Handle invalid password
+                                Toast.makeText(LoginActivity.this, "Invalid password", Toast.LENGTH_SHORT).show();
+                                passwordInput.setError("Invalid password");
+                                loginButton.setEnabled(true);
+                            }
+                        } else {
+                            // Handle non-existent user
+                            Toast.makeText(LoginActivity.this, "User not found", Toast.LENGTH_SHORT).show();
+                            emailInput.setError("User not found");
+                            loginButton.setEnabled(true);
+                        }
+                    } else {
+                        // Handle database error
+                        String errorMessage = task.getException() != null ?
+                                task.getException().getMessage() :
+                                "Login failed";
+                        Toast.makeText(LoginActivity.this, errorMessage, Toast.LENGTH_SHORT).show();
+                        loginButton.setEnabled(true);
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    // Handle network or other errors
+                    Toast.makeText(LoginActivity.this, "Network error: " + e.getMessage(),
+                            Toast.LENGTH_SHORT).show();
+                    loginButton.setEnabled(true);
+                });
     }
 }

@@ -25,8 +25,8 @@ public class SignUpActivity extends AppCompatActivity {
     private TextView loginLink;
     private FirebaseFirestore db;
 
-    db = FirebaseFirestore.getInstance();
-3
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
