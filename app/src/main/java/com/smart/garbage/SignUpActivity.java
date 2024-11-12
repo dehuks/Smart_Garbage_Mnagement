@@ -10,6 +10,11 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.HashMap;
+import java.util.Map;
+
 
 public class SignUpActivity extends AppCompatActivity {
     private EditText nameInput;
@@ -18,7 +23,10 @@ public class SignUpActivity extends AppCompatActivity {
     private EditText confirmPasswordInput;
     private Button signupButton;
     private TextView loginLink;
+    private FirebaseFirestore db;
 
+    db = FirebaseFirestore.getInstance();
+3
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -92,6 +100,16 @@ public class SignUpActivity extends AppCompatActivity {
     private void performSignup(String name, String email, String password) {
         // TODO: Implement your signup logic here
         // This could involve API calls, database creation, etc.
-        Toast.makeText(this, "Creating account...", Toast.LENGTH_SHORT).show();
+        Map<String, Object> user = new HashMap<>();
+        user.put("client_name", name);
+        user.put("email", email);
+        user.put("password", password);
+        db.collection("Client")
+                .document(email)
+                .set(user)
+                .addOnSuccessListener(aVoid -> {
+                    Toast.makeText(this, "Account created successfully!", Toast.LENGTH_SHORT).show();
+                    finish(); // This will return to the LoginActivity
+                });
     }
 }

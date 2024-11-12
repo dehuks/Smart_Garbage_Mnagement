@@ -8,14 +8,28 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.OnFailureListener;
+
+
 
 import androidx.appcompat.app.AppCompatActivity;
 
 public class LoginActivity extends AppCompatActivity {
+
+
     private EditText emailInput;
     private EditText passwordInput;
     private Button loginButton;
     private TextView signupLink;
+
+    FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     // Hardcoded credentials
     private static final String HARD_CODED_EMAIL = "user@example.com";
