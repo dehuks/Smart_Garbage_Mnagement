@@ -1,132 +1,250 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp">
+    android:background="#F5F5F5">
 
-    <!-- Dashboard Title -->
-    <TextView
-        android:id="@+id/dashboardTitle"
-        android:layout_width="wrap_content"
+    <RelativeLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Welcome to the Smart Waste Management Dashboard"
-        android:textSize="24sp"
-        android:layout_centerHorizontal="true"
-        android:textColor="@android:color/black" />
+        android:padding="16dp">
 
-    <!-- Subtitle -->
-    <TextView
-        android:id="@+id/dashboardSubtitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Your data at a glance"
-        android:textSize="18sp"
-        android:layout_below="@id/dashboardTitle"
-        android:layout_marginTop="8dp"
-        android:layout_centerHorizontal="true"
-        android:textColor="@android:color/darker_gray" />
+        <!-- Top Bar with Title and Logout -->
+        <androidx.cardview.widget.CardView
+            android:id="@+id/topBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:cardCornerRadius="12dp"
+            app:cardElevation="4dp"
+            android:layout_marginBottom="16dp">
 
-    <!-- Waste Reduction Tips Title -->
-    <TextView
-        android:id="@+id/tipsTitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Waste Reduction Tips"
-        android:textSize="20sp"
-        android:layout_below="@id/dashboardSubtitle"
-        android:layout_marginTop="24dp"
-        android:textColor="@android:color/holo_blue_dark" />
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="16dp"
+                android:background="@drawable/gradient_background">
 
-    <!-- Waste Reduction Tips Content -->
-    <TextView
-        android:id="@+id/tipsContent"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="• Reduce plastic use\n• Compost organic waste\n• Recycle paper, glass, and metals"
-        android:textSize="16sp"
-        android:layout_below="@id/tipsTitle"
-        android:layout_marginTop="8dp"
-        android:textColor="@android:color/black" />
+                <TextView
+                    android:id="@+id/welcomeText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Welcome Back"
+                    android:textColor="@android:color/white"
+                    android:textSize="24sp"
+                    android:textStyle="bold" />
 
-    <!-- ImageView for Recycling Icon -->
-    <ImageView
-        android:id="@+id/recycleIcon"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        android:layout_below="@id/tipsContent"
-        android:layout_marginTop="16dp"
-        android:layout_alignParentStart="true"
-        android:src="@drawable/ic_recycle"
-        android:contentDescription="Recycle Icon"/>
+                <TextView
+                    android:id="@+id/userEmailText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/welcomeText"
+                    android:text="user@email.com"
+                    android:textColor="@android:color/white"
+                    android:textSize="16sp" />
 
-    <!-- ImageView for Composting Icon -->
-    <ImageView
-        android:id="@+id/compostIcon"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        android:layout_toEndOf="@id/recycleIcon"
-        android:layout_alignTop="@id/recycleIcon"
-        android:layout_marginStart="16dp"
-        android:src="@drawable/ic_compost"
-        android:contentDescription="Compost Icon"/>
+                <Button
+                    android:id="@+id/logoutButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:backgroundTint="#FF5252"
+                    android:text="Logout"
+                    android:textColor="@android:color/white" />
+            </RelativeLayout>
+        </androidx.cardview.widget.CardView>
 
-    <!-- ImageView for Statistics Icon -->
-    <ImageView
-        android:id="@+id/statsIcon"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        android:layout_toEndOf="@id/compostIcon"
-        android:layout_alignTop="@id/recycleIcon"
-        android:layout_marginStart="16dp"
-        android:src="@drawable/ic_stats"
-        android:contentDescription="Statistics Icon"/>
+        <!-- Statistics Card -->
+        <androidx.cardview.widget.CardView
+            android:id="@+id/statsCard"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/topBar"
+            android:layout_marginBottom="16dp"
+            app:cardCornerRadius="12dp"
+            app:cardElevation="4dp">
 
-    <!-- Daily Waste Statistics Title -->
-    <TextView
-        android:id="@+id/statsTitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Today's Waste Statistics"
-        android:textSize="20sp"
-        android:layout_below="@id/recycleIcon"
-        android:layout_marginTop="24dp"
-        android:textColor="@android:color/holo_green_dark" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
 
-    <!-- Daily Waste Statistics Content -->
-    <TextView
-        android:id="@+id/statsContent"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="• Plastic: 1.5 kg\n• Organic: 2.3 kg\n• Paper: 1.0 kg"
-        android:textSize="16sp"
-        android:layout_below="@id/statsTitle"
-        android:layout_marginTop="8dp"
-        android:textColor="@android:color/black" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Today's Statistics"
+                    android:textColor="#1976D2"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
 
-    <!-- Go to Map Screen Button -->
-    <Button
-        android:id="@+id/goToMapButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Go to Map Screen"
-        android:textSize="18sp"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="72dp"
-        android:backgroundTint="@android:color/holo_green_dark"
-        android:textColor="@android:color/white" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:orientation="horizontal">
 
-    <!-- Request Pickup Button -->
-    <Button
-        android:id="@+id/requestPickupButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Request Pickup Now"
-        android:textSize="18sp"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="16dp"
-        android:backgroundTint="@android:color/holo_blue_dark"
-        android:textColor="@android:color/white"/>
+                    <!-- Plastic Stats -->
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
 
-</RelativeLayout>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Plastic"
+                            android:textColor="#666666"
+                            android:textSize="16sp" />
+
+                        <TextView
+                            android:id="@+id/plasticStats"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="1.5 kg"
+                            android:textColor="#000000"
+                            android:textSize="20sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+
+                    <!-- Organic Stats -->
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Organic"
+                            android:textColor="#666666"
+                            android:textSize="16sp" />
+
+                        <TextView
+                            android:id="@+id/organicStats"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="2.3 kg"
+                            android:textColor="#000000"
+                            android:textSize="20sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+
+                    <!-- Paper Stats -->
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Paper"
+                            android:textColor="#666666"
+                            android:textSize="16sp" />
+
+                        <TextView
+                            android:id="@+id/paperStats"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="1.0 kg"
+                            android:textColor="#000000"
+                            android:textSize="20sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+        <!-- Tips Card -->
+        <androidx.cardview.widget.CardView
+            android:id="@+id/tipsCard"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/statsCard"
+            android:layout_marginBottom="16dp"
+            app:cardCornerRadius="12dp"
+            app:cardElevation="4dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Waste Reduction Tips"
+                    android:textColor="#4CAF50"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:lineSpacingExtra="8dp"
+                    android:text="• Reduce plastic use by carrying reusable bags\n• Compost organic waste for garden use\n• Recycle paper, glass, and metals properly\n• Choose products with minimal packaging"
+                    android:textColor="#333333"
+                    android:textSize="16sp" />
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+        <!-- Quick Actions Card -->
+        <androidx.cardview.widget.CardView
+            android:id="@+id/actionsCard"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tipsCard"
+            android:layout_marginBottom="16dp"
+            app:cardCornerRadius="12dp"
+            app:cardElevation="4dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Quick Actions"
+                    android:textColor="#FF9800"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+
+                <Button
+                    android:id="@+id/requestPickupButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:backgroundTint="#4CAF50"
+                    android:drawableStart="@drawable/ic_pickup"
+                    android:padding="16dp"
+                    android:text="Request Pickup Now"
+                    android:textAllCaps="false"
+                    android:textColor="@android:color/white"
+                    android:textSize="18sp" />
+
+                <Button
+                    android:id="@+id/goToMapButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:backgroundTint="#2196F3"
+                    android:drawableStart="@drawable/ic_map"
+                    android:padding="16dp"
+                    android:text="View Collection Points"
+                    android:textAllCaps="false"
+                    android:textColor="@android:color/white"
+                    android:textSize="18sp" />
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+    </RelativeLayout>
+</ScrollView>

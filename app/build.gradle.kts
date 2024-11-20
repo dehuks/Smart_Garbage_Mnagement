@@ -21,6 +21,7 @@ android {
 dependencies {
     // Add the Firebase BOM
     implementation(platform("com.google.firebase:firebase-bom:32.7.0"))
+    implementation("androidx.cardview:cardview:1.0.0")
 
     // Your existing dependencies
     implementation(libs.appcompat)
