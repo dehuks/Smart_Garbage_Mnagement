@@ -34,6 +34,6 @@
         android:layout_width="wrap_content"
         android:layout_height="48dp"
         android:text="New user? Sign up here"
-        android:textColor="@color/blue"
+        android:textColor="@color/navy"
         android:clickable="true"/>
 </LinearLayout>

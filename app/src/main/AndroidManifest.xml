@@ -34,6 +34,8 @@
         <activity
             android:name=".DashboardActivity"
             android:exported="false" />
+        <activity android:name=".MapsActivity" />
+
 
         <!-- RequestPickupActivity should also be private (not exported) -->
         <activity
@@ -42,7 +44,7 @@
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyAa9WKgCIepOtZoOfZQIqHHa4WsKkBMioc"/>
+            android:value=""/>
     </application>
 
 </manifest>
