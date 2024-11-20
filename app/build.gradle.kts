@@ -37,6 +37,10 @@ dependencies {
     implementation("com.google.firebase:firebase-common")
     implementation(libs.firebase.crashlytics.buildtools)
 
+
+    // Firebase Authentication
+    implementation("com.google.firebase:firebase-auth")
+
     // Testing dependencies
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)

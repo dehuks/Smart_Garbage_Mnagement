@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "626916717118",
+    "firebase_url": "https://com-smart-garbage-default-rtdb.firebaseio.com",
+    "project_id": "com-smart-garbage",
+    "storage_bucket": "com-smart-garbage.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:626916717118:android:005b2ac25375eb00f2576f",
+        "android_client_info": {
+          "package_name": "com.smart.garbage"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBTSx0dguZrLV_-wEFSda3OU1SqxezEouM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
