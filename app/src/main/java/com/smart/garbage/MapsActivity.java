@@ -2,11 +2,11 @@ package com.smart.garbage;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -21,14 +21,15 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.firebase.crashlytics.buildtools.reloc.com.google.common.reflect.TypeToken;
-import com.google.gson.Gson;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.GeoPoint;
+import com.google.firebase.firestore.ListenerRegistration;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 
-
-import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class MapsActivity extends AppCompatActivity implements
         OnMapReadyCallback,
@@ -38,17 +39,45 @@ public class MapsActivity extends AppCompatActivity implements
     private GoogleMap mMap;
     private FusedLocationProviderClient fusedLocationClient;
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
+    private FirebaseFirestore db;
+    private ListenerRegistration markerListener;
     private List<MarkerData> markers = new ArrayList<>();
+    private static final String COLLECTION_MARKERS = "Markers";
 
-    private static class MarkerData {
-        LatLng position;
-        String title;
-        String snippet;
+    // Firestore data model
+    public static class MarkerData {
+        private GeoPoint location;
+        private String title;
+        private String snippet;
+        private String id;
 
-        MarkerData(LatLng position, String title, String snippet) {
-            this.position = position;
+        public MarkerData() {}
+
+        public MarkerData(LatLng position, String title, String snippet) {
+            this.location = new GeoPoint(position.latitude, position.longitude);
             this.title = title;
             this.snippet = snippet;
+        }
+
+        public static MarkerData fromMap(Map<String, Object> map, String id) {
+            MarkerData data = new MarkerData();
+            data.location = (GeoPoint) map.get("location");
+            data.title = (String) map.get("title");
+            data.snippet = (String) map.get("snippet");
+            data.id = id;
+            return data;
+        }
+
+        public Map<String, Object> toMap() {
+            Map<String, Object> map = new HashMap<>();
+            map.put("location", location);
+            map.put("title", title);
+            map.put("snippet", snippet);
+            return map;
+        }
+
+        public LatLng getPosition() {
+            return new LatLng(location.getLatitude(), location.getLongitude());
         }
     }
 
@@ -57,24 +86,65 @@ public class MapsActivity extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
 
-        initializeMap();
-        initializeLocationServices();
-        setupFab();
-    }
+        db = FirebaseFirestore.getInstance();
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
-    private void initializeMap() {
+        // Initialize map
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);
+        if (mapFragment != null) {
+            mapFragment.getMapAsync(this);
+        }
     }
 
-    private void initializeLocationServices() {
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+    @Override
+    protected void onStart() {
+        super.onStart();
+        setupFirestoreListener();
     }
 
-    private void setupFab() {
-        FloatingActionButton fabAddMarker = findViewById(R.id.fabAddMarker);
-        fabAddMarker.setOnClickListener(v -> showAddMarkerDialog());
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (markerListener != null) {
+            markerListener.remove();
+        }
+    }
+
+    private void setupFirestoreListener() {
+        markerListener = db.collection(COLLECTION_MARKERS)
+                .addSnapshotListener((snapshots, e) -> {
+                    if (e != null) {
+                        Toast.makeText(this, "Error loading markers: " + e.getMessage(),
+                                Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
+                    if (snapshots != null && mMap != null) {
+                        mMap.clear();
+                        markers.clear();
+
+                        for (QueryDocumentSnapshot document : snapshots) {
+                            MarkerData markerData = MarkerData.fromMap(
+                                    document.getData(),
+                                    document.getId()
+                            );
+                            markers.add(markerData);
+                            addMarkerToMap(markerData);
+                        }
+                    }
+                });
+    }
+
+    private void addMarkerToMap(MarkerData markerData) {
+        MarkerOptions markerOptions = new MarkerOptions()
+                .position(markerData.getPosition())
+                .title(markerData.title)
+                .snippet(markerData.snippet);
+        Marker marker = mMap.addMarker(markerOptions);
+        if (marker != null) {
+            marker.setTag(markerData.id);
+        }
     }
 
     @Override
@@ -87,8 +157,6 @@ public class MapsActivity extends AppCompatActivity implements
         if (checkLocationPermissions()) {
             enableMyLocation();
         }
-
-        loadMarkers();
     }
 
     private boolean checkLocationPermissions() {
@@ -120,11 +188,6 @@ public class MapsActivity extends AppCompatActivity implements
         showAddMarkerDialog(latLng);
     }
 
-    private void showAddMarkerDialog() {
-        LatLng center = mMap.getCameraPosition().target;
-        showAddMarkerDialog(center);
-    }
-
     private void showAddMarkerDialog(LatLng position) {
         View dialogView = getLayoutInflater().inflate(R.layout.dialog_add_marker, null);
         EditText titleInput = dialogView.findViewById(R.id.titleInput);
@@ -136,52 +199,44 @@ public class MapsActivity extends AppCompatActivity implements
                 .setPositiveButton("Add", (dialog, which) -> {
                     String title = titleInput.getText().toString();
                     String snippet = snippetInput.getText().toString();
-                    addMarker(position, title, snippet);
+                    addMarkerToFirestore(position, title, snippet);
                 })
                 .setNegativeButton("Cancel", null)
                 .show();
     }
 
-    private void addMarker(LatLng position, String title, String snippet) {
-        MarkerOptions markerOptions = new MarkerOptions()
-                .position(position)
-                .title(title)
-                .snippet(snippet);
-        mMap.addMarker(markerOptions);
-        markers.add(new MarkerData(position, title, snippet));
-        saveMarkers();
+    private void addMarkerToFirestore(LatLng position, String title, String snippet) {
+        MarkerData markerData = new MarkerData(position, title, snippet);
+        db.collection(COLLECTION_MARKERS)
+                .add(markerData.toMap())
+                .addOnSuccessListener(documentReference ->
+                        Toast.makeText(MapsActivity.this,
+                                "Marker added successfully", Toast.LENGTH_SHORT).show())
+                .addOnFailureListener(e ->
+                        Toast.makeText(MapsActivity.this,
+                                "Failed to add marker: " + e.getMessage(),
+                                Toast.LENGTH_SHORT).show());
     }
 
     @Override
     public boolean onMarkerClick(Marker marker) {
-        marker.showInfoWindow();
+        String markerId = (String) marker.getTag();
+        if (markerId != null) {
+            marker.showInfoWindow();
+        }
         return true;
     }
 
-    private void saveMarkers() {
-        SharedPreferences prefs = getPreferences(MODE_PRIVATE);
-        SharedPreferences.Editor editor = prefs.edit();
-        Gson gson = new Gson();
-        String markersJson = gson.toJson(markers);
-        editor.putString("markers", markersJson);
-        editor.apply();
-    }
-
-    private void loadMarkers() {
-        SharedPreferences prefs = getPreferences(MODE_PRIVATE);
-        String markersJson = prefs.getString("markers", "");
-
-        if (!markersJson.isEmpty()) {
-            Gson gson = new Gson();
-            Type type = new TypeToken<List<MarkerData>>() {}.getType();
-            markers = gson.fromJson(markersJson, type);
-
-            for (MarkerData marker : markers) {
-                mMap.addMarker(new MarkerOptions()
-                        .position(marker.position)
-                        .title(marker.title)
-                        .snippet(marker.snippet));
-            }
-        }
+    private void deleteMarker(String markerId) {
+        db.collection(COLLECTION_MARKERS)
+                .document(markerId)
+                .delete()
+                .addOnSuccessListener(aVoid ->
+                        Toast.makeText(MapsActivity.this,
+                                "Marker deleted successfully", Toast.LENGTH_SHORT).show())
+                .addOnFailureListener(e ->
+                        Toast.makeText(MapsActivity.this,
+                                "Failed to delete marker: " + e.getMessage(),
+                                Toast.LENGTH_SHORT).show());
     }
 }
