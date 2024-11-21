@@ -50,6 +50,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Already have an account? Login"
-        android:textColor="@color/blue"
+        android:textColor="@color/navy"
         android:clickable="true"/>
 </LinearLayout>
